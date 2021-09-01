@@ -18,7 +18,6 @@ class MoodleTestFormation:
 
     def preparation(self):
         for row_i in range(0, len(self.df)):
-            self.emails.add(self.df[self.collum_name[2]][row_i])
             for collum_i in range(0, int(len(self.question))):
                 object_json = {self.collum_name[0]: self.df[self.collum_name[0]][row_i],
                                self.collum_name[1]: self.df[self.collum_name[1]][row_i],
@@ -56,6 +55,10 @@ class MoodleTestFormation:
 
                 self.result_json.append(object_json)
 
+    def mail_preparation(self):
+        for row_i in range(0, len(self.df)):
+            self.emails.add(self.df[self.collum_name[2]][row_i])
+
     def to_exel(self):
         self.preparation()
         df = pd.DataFrame(self.result_json)
@@ -70,16 +73,15 @@ class MoodleTestFormation:
         collection.insert_many(self.result_json)
 
     def to_mail(self):
-        self.preparation()
+        self.mail_preparation()
         for email in self.emails:
             html_file_create(email)
 
-        mail_send_message(emails)
+        mail_send_message(self.emails)
 
 
 class Gift:
     def __init__(self, path):
-
         self.wb = op.load_workbook(path, data_only=True)  # Open exel file for work
         self.sheet = self.wb.active
         self.number_row = self.sheet.max_row  # Counts the number of rows

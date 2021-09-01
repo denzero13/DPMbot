@@ -32,6 +32,7 @@ def html_file_create(name):
 
 
 def mail_send_message(emails):
+    print(emails)
     smtpObj = smtplib.SMTP('smtp.gmail.com', 587)
     smtpObj.starttls()
     smtpObj.login(my_email_account, my_email_password)
@@ -40,11 +41,12 @@ def mail_send_message(emails):
     msg["Subject"] = "DPM Test Result"
 
     for email in emails:
-        msg["To"] = email
-        msg.set_content("Downland and open this file")
-        msg.add_attachment(open(f"email/{email}.html", "r").read(), filename="DPM_test_result.html")
-        smtpObj.send_message(msg)
+        try:
+            msg["To"] = email
+            msg.set_content("Downland and open this file")
+            msg.add_attachment(open(f"email/{email}.html", "r").read(), filename="DPM_test_result.html")
+            smtpObj.send_message(msg)
+        except ValueError:
+            pass
 
     smtpObj.quit()
-
-html_file_create("ppp")
