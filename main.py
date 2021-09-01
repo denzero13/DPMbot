@@ -14,7 +14,8 @@ message_text = None
 markup = telebot.types.InlineKeyboardMarkup()
 markup.add(telebot.types.InlineKeyboardButton(text="Import in GIFT. I am work with xlsx", callback_data=1))
 markup.add(telebot.types.InlineKeyboardButton(text="Formatting results.I am work with csv ", callback_data=2))
-markup.add(telebot.types.InlineKeyboardButton(text="Sent to Cloud. I am work with csv", callback_data=3))
+markup.add(telebot.types.InlineKeyboardButton(text="Send to Cloud. I am work with csv", callback_data=3))
+markup.add(telebot.types.InlineKeyboardButton(text="Send to Users. I am work with csv", callback_data=4))
 
 
 @bot.message_handler(commands=["status", "help"])
@@ -79,6 +80,14 @@ def query_handler(call):
                 data.to_mongo(str(message_text))
                 bot.edit_message_reply_markup(call.message.chat.id, call.message.message_id)
                 bot.send_message(call.message.chat.id, "Date loaded in Cloud")
+
+            elif call.data == "4":
+                data = MoodleTestFormation(file_info.file_path)
+                bot.send_message(call.message.chat.id, "In process")
+                data.to_mail()
+                bot.edit_message_reply_markup(call.message.chat.id, call.message.message_id)
+                bot.send_message(call.message.chat.id, "I sent all message to users")
+                remove("email/*.html")
 
         remove(file_info.file_path)
 
