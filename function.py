@@ -46,7 +46,6 @@ def mail_send_message(emails):
             msg.set_content("Downland and open this file")
             msg.add_attachment(open(f"email/{email}.html", "r").read(), filename="DPM_test_result.html")
             smtpObj.send_message(msg)
-        except ValueError:
+        except [ValueError, OSError]:
             pass
-
     smtpObj.quit()
