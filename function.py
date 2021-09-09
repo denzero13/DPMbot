@@ -50,5 +50,3 @@ def mail_send_message(emails):
         except [ValueError, OSError]:
             pass
     smtpObj.quit()
-
-mail_send_message(["seit.art@gmail.com"])
