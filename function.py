@@ -42,6 +42,7 @@ def mail_send_message(emails):
 
     for email in emails:
         try:
+            html_file_create(email)
             msg["To"] = email
             msg.set_content("Downland and open this file")
             msg.add_attachment(open(f"email/{email}.html", "r").read(), filename="DPM_test_result.html")
@@ -49,3 +50,5 @@ def mail_send_message(emails):
         except [ValueError, OSError]:
             pass
     smtpObj.quit()
+
+mail_send_message(["seit.art@gmail.com"])
