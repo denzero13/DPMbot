@@ -74,9 +74,6 @@ class MoodleTestFormation:
 
     def to_mail(self):
         self.mail_preparation()
-        for email in self.emails:
-            html_file_create(email)
-
         mail_send_message(self.emails)
 
 
