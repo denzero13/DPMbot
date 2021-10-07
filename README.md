@@ -22,6 +22,6 @@ token = 'Your bot token'
 
 Enter the command to install all libraries
 ```python
-pip install -r requirements.txt
+pip3 install -r requirements.txt
 ```
 
