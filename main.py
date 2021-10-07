@@ -1,21 +1,22 @@
-import telebot
+from telebot import types, TeleBot
 import config
 import urllib.request
 from os import remove
 from Classes import MoodleTestFormation, Gift
+from function import purge
 
 
-bot = telebot.TeleBot(config.token)
+bot = TeleBot(config.token)
 message_file = None
 message_text = None
 
 
 # Inline keyboard
-markup = telebot.types.InlineKeyboardMarkup()
-markup.add(telebot.types.InlineKeyboardButton(text="Import in GIFT. I am work with xlsx", callback_data=1))
-markup.add(telebot.types.InlineKeyboardButton(text="Formatting results.I am work with csv ", callback_data=2))
-markup.add(telebot.types.InlineKeyboardButton(text="Send to Cloud. I am work with csv", callback_data=3))
-markup.add(telebot.types.InlineKeyboardButton(text="Send to Users. I am work with csv", callback_data=4))
+markup = types.InlineKeyboardMarkup()
+markup.add(types.InlineKeyboardButton(text="Import in GIFT. I am work with xlsx", callback_data=1))
+markup.add(types.InlineKeyboardButton(text="Formatting results.I am work with csv ", callback_data=2))
+markup.add(types.InlineKeyboardButton(text="Send to Cloud. I am work with csv", callback_data=3))
+markup.add(types.InlineKeyboardButton(text="Send to Users. I am work with csv", callback_data=4))
 
 
 @bot.message_handler(commands=["status", "help"])
@@ -49,6 +50,7 @@ def query_handler(call):
     try:
         file_info = bot.get_file(message_file.document.file_id)
         bot.answer_callback_query(callback_query_id=call.id, text="Thanks")
+        file_format = ""
 
         if call.data == "1" and ".xlsx" in file_info.file_path:
             urllib.request.urlretrieve(f"http://api.telegram.org/file/bot"
@@ -58,10 +60,13 @@ def query_handler(call):
             file = open("documents/import.txt", "rb")
             bot.send_message(call.message.chat.id, "The file in GIFT format")
             bot.send_document(message_file.chat.id, file)
+            file_format = ".xlsx"
 
         elif ".csv" in file_info.file_path:
             urllib.request.urlretrieve(f"http://api.telegram.org/file/bot"
                                        f"{config.token}/{file_info.file_path}", file_info.file_path)
+            file_format = ".csv"
+
             if call.data == "1":
                 bot.send_message(call.message.chat.id, "I do not work with csv")
 
@@ -87,9 +92,9 @@ def query_handler(call):
                 data.to_mail()
                 bot.edit_message_reply_markup(call.message.chat.id, call.message.message_id)
                 bot.send_message(call.message.chat.id, "I sent all message to users")
-                remove("email/*.html")
+                file_format = ".html"
 
-        remove(file_info.file_path)
+        purge("documents", file_format)
 
     except AttributeError:
         bot.send_message(call.message.chat.id, text="I found error .Please try again")

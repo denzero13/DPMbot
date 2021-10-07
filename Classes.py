@@ -1,5 +1,5 @@
 import pandas as pd
-import openpyxl as op
+from openpyxl import load_workbook
 from pymongo import MongoClient
 from function import regex_kod, category, html_file_create, mail_send_message
 from config import mongo_connect
@@ -14,7 +14,6 @@ class MoodleTestFormation:
         self.response = self.collum_name[9::3]
         self.right_answer = self.collum_name[10::3]
         self.result_json = []
-        self.emails = set()
 
     def preparation(self):
         for row_i in range(0, len(self.df)):
@@ -79,14 +78,16 @@ class MoodleTestFormation:
 
 class Gift:
     def __init__(self, path):
-        self.wb = op.load_workbook(path, data_only=True)  # Open exel file for work
+        self.wb = load_workbook(path)  # Open exel file for work
         self.sheet = self.wb.active
         self.number_row = self.sheet.max_row  # Counts the number of rows
         self.main_category = 'Main category name'
 
         self.category = set()
         for i in range(2, self.number_row):
-            self.category.add(self.sheet.cell(row=i, column=8).value)
+            value = self.sheet.cell(row=i, column=8).value
+            if type(value) == str:
+                self.category.add(value)
 
     def data_formation(self):
         with open('documents/import.txt', 'tw', encoding='utf-8') as file:
@@ -99,7 +100,7 @@ class Gift:
                 # Category
                 file.write(f'// question: 0  name: Switch category to $cat1$/top/{self.main_category}/{teg}\n')
                 file.write(f'$CATEGORY: /top/{self.main_category}/{teg}' + '\n' * 3)
-
+                # print(teg, ": ", iteration)
                 for i in range(2, self.number_row):
 
                     variant = {'A': '~', 'B': '~', 'C': '~', 'D': '~'}  # Answers value
@@ -118,9 +119,9 @@ class Gift:
                         file.write(f'::{teg}\t' + str(self.sheet.cell(row=i, column=1).value))
                         file.write(f'\:::[html]{teg}\t' + str(self.sheet.cell(row=i, column=1).value) + '\:{' + '\n')
                         # Answers
-                        file.write('\t'+str(self.variant.get('A'))+str(self.sheet.cell(row=i, column=2).value)+'\n')
-                        file.write('\t'+str(self.variant.get('B'))+str(self.sheet.cell(row=i, column=3).value)+'\n')
-                        file.write('\t'+str(self.variant.get('C'))+str(self.sheet.cell(row=i, column=4).value)+'\n')
-                        file.write('\t'+str(self.variant.get('D'))+str(self.sheet.cell(row=i, column=5).value)+'\n')
+                        file.write('\t'+str(variant.get('A'))+str(self.sheet.cell(row=i, column=2).value)+'\n')
+                        file.write('\t'+str(variant.get('B'))+str(self.sheet.cell(row=i, column=3).value)+'\n')
+                        file.write('\t'+str(variant.get('C'))+str(self.sheet.cell(row=i, column=4).value)+'\n')
+                        file.write('\t'+str(variant.get('D'))+str(self.sheet.cell(row=i, column=5).value)+'\n')
                         file.write('} '+'\n'*3)
                         iteration += 1

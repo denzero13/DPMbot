@@ -1,4 +1,5 @@
 import re
+import os
 import smtplib
 from email.message import EmailMessage
 from config import my_email_account, my_email_password, HtmlFile
@@ -50,3 +51,9 @@ def mail_send_message(emails):
         except [ValueError, OSError]:
             pass
     smtpObj.quit()
+
+
+def purge(dir, pattern):
+    for f in os.listdir(dir):
+        if re.search(pattern, f):
+            os.remove(os.path.join(dir, f))
