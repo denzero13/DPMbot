@@ -112,7 +112,7 @@ class Gift:
 
                     if teg == self.sheet.cell(row=i, column=8).value:
                         # Question name
-                        file.write(f'// question: {iteration} name: '+str(self.sheet.cell(row=i, column=1).value)+'\n')
+                        file.write(f'// question: {iteration} name:{teg} '+str(self.sheet.cell(row=i, column=1).value)+'\n')
                         # Kod in tag
                         file.write(f'// [tag:{teg}]' + '\n')
                         # Question title
