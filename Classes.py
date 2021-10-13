@@ -1,7 +1,7 @@
 import pandas as pd
 from openpyxl import load_workbook
 from pymongo import MongoClient
-from function import regex_kod, category, html_file_create, mail_send_message
+from function import regex_kod, html_file_create, mail_send_message
 from config import mongo_connect
 
 
@@ -34,7 +34,7 @@ class MoodleTestFormation:
                     qw = self.df[self.question[collum_i]][row_i]
 
                 object_json["Kod"] = kod
-                object_json["Category"] = category(kod[2])
+                object_json["Category"] = kod[2]
                 object_json["Question"] = qw[0]
 
                 # User result

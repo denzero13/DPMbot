@@ -14,15 +14,6 @@ def regex_kod(text):
         return kod
 
 
-def category(kod):
-    if kod == "3":
-        return "Контекст"
-    if kod == "4":
-        return "Люди"
-    if kod == "5":
-        return "Практика"
-
-
 def html_file_create(name):
     with open(f"email/{name}.html", "w") as file:
         mail = {"Email address": name}
