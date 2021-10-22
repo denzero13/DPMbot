@@ -37,7 +37,6 @@ class MoodleTestFormation:
                     object_json["Category"] = kod[2]
                     object_json["Question"] = qw[0]
                 except TypeError:
-
                     break
 
                 # User result
