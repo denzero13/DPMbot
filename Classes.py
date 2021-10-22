@@ -37,7 +37,7 @@ class MoodleTestFormation:
                     object_json["Category"] = kod[2]
                     object_json["Question"] = qw[0]
                 except TypeError:
-                    pass
+                    break
 
                 # User result
                 object_json["Response"] = self.df[self.response[collum_i]][row_i]
