@@ -32,10 +32,12 @@ class MoodleTestFormation:
                 except TypeError:
                     kod = "Kod not found"
                     qw = self.df[self.question[collum_i]][row_i]
-
-                object_json["Kod"] = kod
-                object_json["Category"] = kod[2]
-                object_json["Question"] = qw[0]
+                try:
+                    object_json["Kod"] = kod
+                    object_json["Category"] = kod[2]
+                    object_json["Question"] = qw[0]
+                except TypeError:
+                    pass
 
                 # User result
                 object_json["Response"] = self.df[self.response[collum_i]][row_i]
